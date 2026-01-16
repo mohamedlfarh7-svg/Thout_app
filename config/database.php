@@ -1,10 +1,8 @@
 <?php
-
-return [
+$db_config = [
     'host' => 'localhost',
-    'dbname' => 'thoth_lms',
     'username' => 'root',
     'password' => '',
-    'charset' => 'utf8mb4'
+    'database' => 'student_management'
 ];
 ?>

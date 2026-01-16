@@ -1,21 +1,32 @@
 <?php
-
-class Database
-{
-    public static function getConnection()
-    {
-        static $conn = null;
+class Database {
+    private $connection;
+    
+    public function __construct() {
+        global $db_config;
         
-        if ($conn === null) {
-            $conn = new PDO(
-                "mysql:host=localhost;dbname=thoth_lms;charset=utf8mb4",
-                "root",
-                ""
-            );
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $this->connection = new mysqli(
+            $db_config['host'],
+            $db_config['username'],
+            $db_config['password'],
+            $db_config['database']
+        );
+        
+        if ($this->connection->connect_error) {
+            die("Connection failed: " . $this->connection->connect_error);
         }
-        
-        return $conn;
+    }
+    
+    public function query($sql) {
+        return $this->connection->query($sql);
+    }
+    
+    public function escape($value) {
+        return $this->connection->real_escape_string($value);
+    }
+    
+    public function getLastInsertId() {
+        return $this->connection->insert_id;
     }
 }
 ?>

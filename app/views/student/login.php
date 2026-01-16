@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Tous les champs sont obligatoires !";
     } else {
         if ($auth->login($email, $password)) {
-            header('Location: ../dashboard/dashboard.php');
+            header('Location: ../student/dashboard.php');
             exit;
         } else {
             $error = "Email ou mot de passe incorrect";

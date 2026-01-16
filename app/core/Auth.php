@@ -12,10 +12,10 @@ class auth {
         }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
     }
 
-    public function register($nom, $email, $password, $role = 'membre') {
+    public function register($name, $email, $password) {
 
         $checkEmail = $this->db->prepare(
-            "SELECT id FROM users WHERE email = ?"
+            "SELECT id FROM students WHERE email = ?"
         );
         $checkEmail->execute([$email]);
 
@@ -26,24 +26,25 @@ class auth {
         $hash = password_hash($password, PASSWORD_DEFAULT);
     
         $insert = $this->db->prepare(
-            "INSERT INTO users (nom, email, mot_de_passe) VALUES (?, ?, ?)"
+            "INSERT INTO students (name, email, password) VALUES (?, ?, ?)"
         );
 
-        return $insert->execute([$nom, $email, $hash]);
+        return $insert->execute([$name, $email, $hash]);
     }
 
     public function login($email, $password) {
         $stmt = $this->db->prepare(
-            "SELECT * FROM users WHERE email = ? AND statut = 'actif'"
+            "SELECT * FROM students WHERE email = ?"
         );
         $stmt->execute([$email]);
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if($user && password_verify($password, $user['mot_de_passe'])) {
+        if($user && password_verify($password, $user['password'])) {
             $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_nom'] = $user['nom'];
+            $_SESSION['user_nom'] = $user['name'];
             $_SESSION['user_email'] = $user['email'];
+            
             return true;
         }
         
